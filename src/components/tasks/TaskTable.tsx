@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
-import { ChevronDown, ChevronRight, ArrowUpDown, MoreVertical, Link2 } from 'lucide-react'
-import type { Task } from '../../data/mockData'
+import { ChevronDown, ChevronRight, ArrowUpDown, MoreVertical, CheckSquare } from 'lucide-react'
+import type { Task, SubTask } from '../../data/mockData'
 import { StatusBadge, PriorityBadge } from '../ui/Badge'
 import { AvatarStack } from '../ui/AvatarStack'
 import { ProgressBar } from '../ui/ProgressBar'
@@ -8,11 +8,20 @@ import { ProgressBar } from '../ui/ProgressBar'
 interface TaskTableProps {
   tasks: Task[]
   onSelectTask: (task: Task) => void
+  onSelectSubTask?: (sub: SubTask, parent: Task) => void
   selectedTaskId?: string
+  selectedSubTaskId?: string
   showSubTasks?: boolean
 }
 
-export function TaskTable({ tasks, onSelectTask, selectedTaskId, showSubTasks = false }: TaskTableProps) {
+export function TaskTable({
+  tasks,
+  onSelectTask,
+  onSelectSubTask,
+  selectedTaskId,
+  selectedSubTaskId,
+  showSubTasks = false,
+}: TaskTableProps) {
   const [expanded, setExpanded] = useState<Record<string, boolean>>({})
   const [contextMenu, setContextMenu] = useState<{ taskId: string; subTaskId: string } | null>(null)
 
@@ -46,7 +55,7 @@ export function TaskTable({ tasks, onSelectTask, selectedTaskId, showSubTasks = 
               {/* Main task row */}
               <tr
                 className={`border-b border-gray-50 hover:bg-gray-50 cursor-pointer transition-colors ${
-                  selectedTaskId === task.id ? 'bg-blue-50/50' : ''
+                  selectedTaskId === task.id && !selectedSubTaskId ? 'bg-blue-50/50' : ''
                 }`}
                 onClick={() => onSelectTask(task)}
               >
@@ -92,18 +101,31 @@ export function TaskTable({ tasks, onSelectTask, selectedTaskId, showSubTasks = 
 
               {/* Sub-task rows */}
               {showSubTasks && expanded[task.id] && task.subTasks?.map((sub) => (
-                <tr key={sub.id} className="border-b border-gray-50 bg-gray-50/50 hover:bg-gray-100/50">
+                <tr
+                  key={sub.id}
+                  className={`border-b border-gray-50 hover:bg-blue-50/30 cursor-pointer transition-colors ${
+                    selectedSubTaskId === sub.id ? 'bg-blue-50/50' : 'bg-gray-50/30'
+                  }`}
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    onSelectSubTask?.(sub, task)
+                  }}
+                >
                   <td className="px-4 py-2.5 pl-10">
                     <div className="flex items-center gap-2 text-gray-600">
-                      <Link2 className="w-3 h-3 text-blue-400 flex-shrink-0" />
+                      <CheckSquare className="w-3.5 h-3.5 text-blue-400 flex-shrink-0" />
                       <span className="text-xs truncate max-w-[180px]">{sub.name}</span>
                     </div>
                   </td>
-                  <td className="px-4 py-2.5 text-xs text-gray-500">{task.project}</td>
+                  <td className="px-4 py-2.5 text-xs text-gray-500 truncate max-w-[160px]">{task.project}</td>
                   <td className="px-4 py-2.5">
-                    <AvatarStack assignees={task.assignees.slice(0, 2)} />
+                    <AvatarStack assignees={sub.assignees ?? task.assignees.slice(0, 2)} />
                   </td>
-                  <td className="px-4 py-2.5" />
+                  <td className="px-4 py-2.5">
+                    {sub.progress !== undefined && sub.progress > 0
+                      ? <ProgressBar value={sub.progress} />
+                      : <span />}
+                  </td>
                   <td className="px-4 py-2.5">
                     <PriorityBadge priority={sub.priority as any} />
                   </td>

@@ -4,6 +4,8 @@ import { AppShell } from './components/layout/AppShell'
 import { Dashboard } from './pages/Dashboard'
 import { TaskListing } from './pages/TaskListing'
 import { TaskDescription } from './pages/TaskDescription'
+import { SubTaskDescription } from './pages/SubTaskDescription'
+import { SubTaskKanban } from './pages/SubTaskKanban'
 import { CreateTask } from './pages/CreateTask'
 import { Placeholder } from './pages/Placeholder'
 
@@ -33,17 +35,27 @@ export default function App() {
         <Route path="/*" element={
           <AppShell>
             <Routes>
-              <Route path="/"              element={<Dashboard />} />
-              <Route path="/tasks"         element={<TaskListing />} />
-              <Route path="/tasks/create"  element={<CreateTask />} />
-              <Route path="/tasks/:id"     element={<TaskDescription />} />
-              <Route path="/tasks/support" element={<Placeholder title="Support Tasks"    breadcrumbs={[{ label: 'Jessore Feed Ltd.' }, { label: 'Support Task' }]} />} />
-              <Route path="/my-todo"       element={<Placeholder title="My To-Do"         breadcrumbs={[{ label: 'Jessore Feed Ltd.' }, { label: 'My To-Do' }]} />} />
-              <Route path="/projects"      element={<Placeholder title="Projects"         breadcrumbs={[{ label: 'Jessore Feed Ltd.' }, { label: 'Projects' }]} />} />
-              <Route path="/tickets"       element={<Placeholder title="Support Tickets"  breadcrumbs={[{ label: 'Jessore Feed Ltd.' }, { label: 'Support Tickets' }]} />} />
-              <Route path="/reports"       element={<Placeholder title="Reports"          breadcrumbs={[{ label: 'Jessore Feed Ltd.' }, { label: 'Reports' }]} />} />
-              <Route path="/settings"      element={<Placeholder title="Settings"         breadcrumbs={[{ label: 'Jessore Feed Ltd.' }, { label: 'Settings' }]} />} />
-              <Route path="*"              element={<Navigate to="/" replace />} />
+              <Route path="/"       element={<Dashboard />} />
+
+              {/* ── Task routes ── */}
+              {/* More specific routes must come before /tasks/:id */}
+              <Route path="/tasks/create"           element={<CreateTask />} />
+              <Route path="/tasks/subtask/create"   element={<CreateTask />} />
+              <Route path="/tasks/:id/edit"         element={<CreateTask />} />
+              <Route path="/tasks/:id/subtasks"     element={<SubTaskKanban />} />
+              <Route path="/tasks/:taskId/subtask/:subId" element={<SubTaskDescription />} />
+              <Route path="/tasks/:id"              element={<TaskDescription />} />
+              <Route path="/tasks"                  element={<TaskListing />} />
+              <Route path="/tasks/support"          element={<Placeholder title="Support Tasks"   breadcrumbs={[{ label: 'Jessore Feed Ltd.' }, { label: 'Support Task' }]} />} />
+
+              {/* ── Other routes ── */}
+              <Route path="/my-todo"    element={<Placeholder title="My To-Do"        breadcrumbs={[{ label: 'Jessore Feed Ltd.' }, { label: 'My To-Do' }]} />} />
+              <Route path="/projects"   element={<Placeholder title="Projects"        breadcrumbs={[{ label: 'Jessore Feed Ltd.' }, { label: 'Projects' }]} />} />
+              <Route path="/projects/:id" element={<SubTaskKanban />} />
+              <Route path="/tickets"    element={<Placeholder title="Support Tickets" breadcrumbs={[{ label: 'Jessore Feed Ltd.' }, { label: 'Support Tickets' }]} />} />
+              <Route path="/reports"    element={<Placeholder title="Reports"         breadcrumbs={[{ label: 'Jessore Feed Ltd.' }, { label: 'Reports' }]} />} />
+              <Route path="/settings"   element={<Placeholder title="Settings"        breadcrumbs={[{ label: 'Jessore Feed Ltd.' }, { label: 'Settings' }]} />} />
+              <Route path="*"           element={<Navigate to="/" replace />} />
             </Routes>
           </AppShell>
         } />

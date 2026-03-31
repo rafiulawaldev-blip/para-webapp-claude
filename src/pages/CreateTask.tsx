@@ -1,33 +1,77 @@
 import React, { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams, useLocation } from 'react-router-dom'
 import { Upload, ChevronDown } from 'lucide-react'
 import { Header } from '../components/layout/Header'
+import { TASKS, AVATARS } from '../data/mockData'
+
+type Mode = 'create' | 'subtask' | 'edit'
 
 export function CreateTask() {
   const navigate = useNavigate()
+  const { id } = useParams()
+  const location = useLocation()
+
+  // Detect mode from path
+  const mode: Mode = location.pathname.includes('/subtask/create')
+    ? 'subtask'
+    : id && location.pathname.includes('/edit')
+    ? 'edit'
+    : 'create'
+
+  const editTask = mode === 'edit' ? (TASKS.find((t) => t.id === id) ?? null) : null
+
   const [form, setForm] = useState({
-    taskName: '',
-    project: '',
-    priority: '',
-    assignee: '',
-    file: '',
-    deadline: '',
-    aboutTask: '',
-    description: '',
+    taskName:    editTask?.name    ?? '',
+    project:     editTask?.project ?? '',
+    priority:    editTask?.priority ?? '',
+    assignee:    editTask?.assignees?.[0]?.name ?? '',
+    file:        '',
+    deadline:    editTask?.dueDate ?? '',
+    aboutTask:   '',
+    description: editTask?.description ?? '',
   })
 
-  const set = (field: string, value: string) => setForm((f) => ({ ...f, [field]: value }))
+  const set = (field: string, value: string) =>
+    setForm((f) => ({ ...f, [field]: value }))
+
+  // Labels & headings per mode
+  const heading = mode === 'edit'
+    ? 'Edit Task'
+    : mode === 'subtask'
+    ? 'Create Sub-Task'
+    : 'Create Task'
+
+  const projectLabel = mode === 'subtask' ? 'Select Task' : 'Select Project/Sub-Project'
+  const projectPlaceholder = mode === 'subtask'
+    ? 'Search or select an existing task'
+    : 'Search or select an existing list'
+
+  const submitLabel = mode === 'edit'
+    ? 'Save'
+    : mode === 'subtask'
+    ? 'New Sub-Task'
+    : 'New Task'
+
+  const breadcrumbs = mode === 'edit' && editTask
+    ? [{ label: 'Jessore Feed Ltd.' }, { label: 'Task' }, { label: editTask.name }, { label: 'Edit' }]
+    : mode === 'subtask'
+    ? [{ label: 'Jessore Feed Ltd.' }, { label: 'Task' }, { label: 'New Sub-Task' }]
+    : [{ label: 'Jessore Feed Ltd.' }, { label: 'Task' }, { label: 'New Task' }]
+
+  const handleSubmit = () => {
+    navigate(-1)
+  }
 
   return (
     <div className="flex flex-col h-full overflow-hidden">
       <Header
         title="Task & Ticket Management"
-        breadcrumbs={[{ label: 'Jessore Feed Ltd.' }, { label: 'Task' }, { label: 'New Task' }]}
+        breadcrumbs={breadcrumbs}
       />
 
       <div className="flex-1 overflow-y-auto scrollbar-thin p-8">
         <div className="max-w-3xl mx-auto">
-          <h2 className="text-xl font-semibold text-gray-900 mb-6">Create Task</h2>
+          <h2 className="text-xl font-semibold text-gray-900 mb-6">{heading}</h2>
 
           <div className="grid grid-cols-2 gap-5">
             {/* Task Name */}
@@ -37,17 +81,17 @@ export function CreateTask() {
               </label>
               <input
                 type="text"
-                placeholder="Enter department name"
+                placeholder="Enter or select insert name"
                 value={form.taskName}
                 onChange={(e) => set('taskName', e.target.value)}
                 className="w-full px-4 h-12 text-base border border-[rgba(0,0,0,0.05)] rounded-[8px] bg-white focus:outline-none focus:border-[rgba(0,0,0,0.4)] placeholder:text-[rgba(0,0,0,0.4)] text-[#242529]"
               />
             </div>
 
-            {/* Select Project */}
+            {/* Project/Task Select */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1.5">
-                Select Project/Sub-Project
+                {projectLabel}
               </label>
               <div className="relative">
                 <select
@@ -55,10 +99,17 @@ export function CreateTask() {
                   onChange={(e) => set('project', e.target.value)}
                   className="w-full appearance-none px-4 h-12 text-base border border-[rgba(0,0,0,0.05)] rounded-[8px] bg-white focus:outline-none focus:border-[rgba(0,0,0,0.4)] text-[rgba(0,0,0,0.4)]"
                 >
-                  <option value="">Search or select an existing list</option>
-                  <option>NovaCart Online Store</option>
-                  <option>ShopSphere E-commerce</option>
-                  <option>MarketWave Digital</option>
+                  <option value="">{projectPlaceholder}</option>
+                  {mode === 'subtask'
+                    ? TASKS.map((t) => <option key={t.id} value={t.id}>{t.name}</option>)
+                    : (
+                      <>
+                        <option>NovaCart Online Store</option>
+                        <option>ShopSphere E-commerce</option>
+                        <option>MarketWave Digital</option>
+                        <option>Project Phoenix</option>
+                      </>
+                    )}
                 </select>
                 <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
               </div>
@@ -74,10 +125,10 @@ export function CreateTask() {
                   className="w-full appearance-none px-4 h-12 text-base border border-[rgba(0,0,0,0.05)] rounded-[8px] bg-white focus:outline-none focus:border-[rgba(0,0,0,0.4)] text-[rgba(0,0,0,0.4)]"
                 >
                   <option value="">Search or select an existing list</option>
-                  <option>Urgent</option>
-                  <option>High</option>
-                  <option>Medium</option>
-                  <option>Low</option>
+                  <option value="Low">Low</option>
+                  <option value="Medium">Medium</option>
+                  <option value="High">High A</option>
+                  <option value="Urgent">Urgent A/A</option>
                 </select>
                 <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
               </div>
@@ -93,10 +144,9 @@ export function CreateTask() {
                   className="w-full appearance-none px-4 h-12 text-base border border-[rgba(0,0,0,0.05)] rounded-[8px] bg-white focus:outline-none focus:border-[rgba(0,0,0,0.4)] text-[rgba(0,0,0,0.4)]"
                 >
                   <option value="">Search or select an existing user</option>
-                  <option>Salman Omayer</option>
-                  <option>Hanna</option>
-                  <option>Lydia</option>
-                  <option>Cooper</option>
+                  {AVATARS.map((a) => (
+                    <option key={a.id} value={a.name}>{a.name}</option>
+                  ))}
                 </select>
                 <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
               </div>
@@ -115,26 +165,38 @@ export function CreateTask() {
             {/* Select Deadline */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1.5">Select Deadline</label>
-              <div className="relative">
-                <select
+              {mode === 'edit' ? (
+                <input
+                  type="date"
                   value={form.deadline}
                   onChange={(e) => set('deadline', e.target.value)}
-                  className="w-full appearance-none px-4 h-12 text-base border border-[rgba(0,0,0,0.05)] rounded-[8px] bg-white focus:outline-none focus:border-[rgba(0,0,0,0.4)] text-[rgba(0,0,0,0.4)]"
-                >
-                  <option value="">Search or select an existing user</option>
-                  <option>Nov 27, 2025</option>
-                  <option>Dec 01, 2025</option>
-                  <option>Dec 15, 2025</option>
-                </select>
-                <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
-              </div>
+                  className="w-full px-4 h-12 text-base border border-[rgba(0,0,0,0.05)] rounded-[8px] bg-white focus:outline-none focus:border-[rgba(0,0,0,0.4)] text-[#242529]"
+                />
+              ) : (
+                <div className="relative">
+                  <select
+                    value={form.deadline}
+                    onChange={(e) => set('deadline', e.target.value)}
+                    className="w-full appearance-none px-4 h-12 text-base border border-[rgba(0,0,0,0.05)] rounded-[8px] bg-white focus:outline-none focus:border-[rgba(0,0,0,0.4)] text-[rgba(0,0,0,0.4)]"
+                  >
+                    <option value="">Search or select an existing user</option>
+                    <option>Nov 27, 2025</option>
+                    <option>Dec 01, 2025</option>
+                    <option>Dec 15, 2025</option>
+                    <option>December 29, 2025</option>
+                  </select>
+                  <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
+                </div>
+              )}
             </div>
 
             {/* About Task */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1.5">About Task</label>
               <textarea
-                placeholder="Add details..."
+                placeholder={mode === 'edit'
+                  ? 'Review the corporate task clearly, detailing the goals, necessary steps, and any important deadlines or resources required for successful completion.'
+                  : 'Add details...'}
                 rows={4}
                 value={form.aboutTask}
                 onChange={(e) => set('aboutTask', e.target.value)}
@@ -157,8 +219,11 @@ export function CreateTask() {
 
           {/* Actions */}
           <div className="flex items-center gap-3 mt-6">
-            <button className="px-6 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors">
-              New Task
+            <button
+              onClick={handleSubmit}
+              className="px-6 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors"
+            >
+              {submitLabel}
             </button>
             <button
               onClick={() => navigate(-1)}

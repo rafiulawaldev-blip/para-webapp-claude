@@ -9,6 +9,48 @@ export interface Assignee {
   color: string
 }
 
+export interface Attachment {
+  id: string
+  name: string
+  size: string
+  type: string
+  uploadedAt: string
+  thumbnail?: string
+}
+
+export interface Comment {
+  id: string
+  author: Assignee
+  content: string
+  createdAt: string
+  url?: string
+}
+
+export interface ChecklistItem {
+  id: string
+  label: string
+  checked: boolean
+}
+
+export interface SubTask {
+  id: string
+  name: string
+  priority: Priority
+  dueDate: string
+  status: TaskStatus
+  createdDate?: string
+  progress?: number
+  assignees?: Assignee[]
+  attachments?: Attachment[]
+  checklist?: ChecklistItem[]
+  comments?: Comment[]
+  description?: string
+  companyName?: string
+  branchName?: string
+  departmentName?: string
+  subProjectName?: string
+}
+
 export interface Task {
   id: string
   name: string
@@ -30,35 +72,6 @@ export interface Task {
   subProjectName?: string
 }
 
-export interface SubTask {
-  id: string
-  name: string
-  priority: Priority
-  dueDate: string
-  status: TaskStatus
-}
-
-export interface Attachment {
-  id: string
-  name: string
-  size: string
-  type: string
-  uploadedAt: string
-}
-
-export interface Comment {
-  id: string
-  author: Assignee
-  content: string
-  createdAt: string
-}
-
-export interface ChecklistItem {
-  id: string
-  label: string
-  checked: boolean
-}
-
 export interface TeamRow {
   name: string
   totalTasks: number
@@ -73,53 +86,332 @@ export interface PriorityRow {
   priority: Priority
 }
 
-const AVATARS: Assignee[] = [
-  { id: '1', name: 'Salman Omayer', initials: 'SO', avatar: '', color: '#f97316' },
-  { id: '2', name: 'Hanna',         initials: 'HA', avatar: '', color: '#8b5cf6' },
-  { id: '3', name: 'Lydia',         initials: 'LY', avatar: '', color: '#ec4899' },
-  { id: '4', name: 'Cooper',        initials: 'CO', avatar: '', color: '#06b6d4' },
-  { id: '5', name: 'Alex',          initials: 'AL', avatar: '', color: '#10b981' },
-]
-
-const SUBTASKS: SubTask[] = [
-  { id: 'st1', name: 'Create a user-friendly homepage interf...', priority: 'High',   dueDate: 'Nov 27, 2025', status: 'To-Do' },
-  { id: 'st2', name: 'Construct a homepage that enhances u...', priority: 'Low',    dueDate: 'Nov 27, 2025', status: 'To-Do' },
-  { id: 'st3', name: 'Build an intuitive homepage user interfa...', priority: 'Medium', dueDate: 'Nov 27, 2025', status: 'In Progress' },
-  { id: 'st4', name: 'Design a sleek and modern homepage.',  priority: 'High',   dueDate: 'Nov 27, 2025', status: 'To-Do' },
-  { id: 'st5', name: 'Build an intuitive homepage user interfa...', priority: 'Medium', dueDate: 'Nov 27, 2025', status: 'To-Do' },
-  { id: 'st6', name: 'Craft an engaging homepage design.',   priority: 'High',   dueDate: 'Nov 27, 2025', status: 'To-Do' },
-  { id: 'st7', name: 'Craft an engaging homepage design.',   priority: 'Complete' as any, dueDate: 'Nov 27, 2025', status: 'Complete' },
-  { id: 'st8', name: 'Craft an engaging homepage design.',   priority: 'Low',    dueDate: 'Nov 27, 2025', status: 'To-Do' },
+export const AVATARS: Assignee[] = [
+  { id: '1', name: 'Salman Omayer',  initials: 'SO', avatar: '', color: '#f97316' },
+  { id: '2', name: 'Eleanor Pena',   initials: 'EP', avatar: '', color: '#8b5cf6' },
+  { id: '3', name: 'Brooklyn Simmons', initials: 'BS', avatar: '', color: '#ec4899' },
+  { id: '4', name: 'Jane Cooper',    initials: 'JC', avatar: '', color: '#06b6d4' },
+  { id: '5', name: 'Theresa Webb',   initials: 'TW', avatar: '', color: '#10b981' },
+  { id: '6', name: 'Wade Warren',    initials: 'WW', avatar: '', color: '#3b82f6' },
+  { id: '7', name: 'Ronald Richards', initials: 'RR', avatar: '', color: '#f59e0b' },
+  { id: '8', name: 'Jerome Bell',    initials: 'JB', avatar: '', color: '#6366f1' },
 ]
 
 const CHECKLIST: ChecklistItem[] = [
-  { id: 'cl1', label: 'Research competitor homepages for inspiration', checked: true },
-  { id: 'cl2', label: 'Create wireframe sketches for homepage layout', checked: true },
-  { id: 'cl3', label: 'Design high-fidelity mockups in Figma', checked: false },
-  { id: 'cl4', label: 'Get stakeholder approval on design', checked: false },
-  { id: 'cl5', label: 'Implement responsive HTML/CSS', checked: false },
-  { id: 'cl6', label: 'Conduct usability testing', checked: false },
+  { id: 'cl1', label: 'E-commerce Platform E-commerce', checked: true },
+  { id: 'cl2', label: 'E-commerce Platform E-commerce', checked: true },
+  { id: 'cl3', label: 'E-commerce Platform E-commerce', checked: false },
+  { id: 'cl4', label: 'E-commerce Platform E-commerce', checked: false },
+  { id: 'cl5', label: 'E-commerce Platform E-commerce', checked: true },
+  { id: 'cl6', label: 'E-commerce Platform E-commerce', checked: true },
+  { id: 'cl7', label: 'E-commerce Platform E-commerce', checked: true },
+  { id: 'cl8', label: 'E-commerce Platform E-commerce', checked: false },
+  { id: 'cl9', label: 'E-commerce Platform E-commerce', checked: false },
 ]
 
 const COMMENTS: Comment[] = [
   {
     id: 'c1',
     author: AVATARS[0],
-    content: 'I have completed the wireframe. Moving to high-fidelity design next.',
-    createdAt: 'Nov 10, 2025',
+    content: 'The development should not be paused ASAP, we\'d be launching...',
+    url: 'https://www.figma.com/proto/someproject/Homepage-link',
+    createdAt: 'Nov 10, 2025 at 3:04 PM',
   },
   {
     id: 'c2',
-    author: AVATARS[1],
-    content: 'Looks great! Please make sure to follow the brand guidelines for colors.',
-    createdAt: 'Nov 11, 2025',
+    author: AVATARS[0],
+    content: 'Experience the perfect online shopping hub, where convenience meets style. Immerse yourself in our Digital Marketplace, where convenience meets...',
+    url: 'https://www.figma.com/proto/someproject/Homepage-link',
+    createdAt: 'Nov 10, 2025 at 3:04 PM',
   },
   {
     id: 'c3',
-    author: AVATARS[2],
-    content: 'The stakeholder review is scheduled for Nov 15. Can we have something ready by then?',
-    createdAt: 'Nov 12, 2025',
+    author: AVATARS[0],
+    content: 'The development should not be paused ASAP, we\'d be launching...',
+    url: 'https://www.figma.com/proto/someproject/Homepage-link',
+    createdAt: 'Nov 10, 2025 at 3:04 PM',
   },
+]
+
+const SUB_ATTACHMENTS: Attachment[] = [
+  { id: 'sa1', name: 'E-communities: P File.txt', size: '1.4 kb', type: 'image', uploadedAt: 'Nov 05, 2025' },
+  { id: 'sa2', name: '%Attac...', size: '2.1 kb', type: 'image', uploadedAt: 'Nov 06, 2025' },
+  { id: 'sa3', name: 'E-communities: plat...', size: '0 comments · 74x74', type: 'image', uploadedAt: 'Nov 07, 2025' },
+  { id: 'sa4', name: 'E-communities', size: '4 comments · Pls ok', type: 'image', uploadedAt: 'Nov 08, 2025' },
+]
+
+const SUB_CHECKLIST: ChecklistItem[] = [
+  { id: 'scl1', label: 'E-commerce Platform E-commerce', checked: false },
+  { id: 'scl2', label: 'E-commerce Platform E-commerce', checked: false },
+  { id: 'scl3', label: 'E-commerce Platform E-commerce', checked: false },
+  { id: 'scl4', label: 'E-commerce Platform E-commerce', checked: true },
+  { id: 'scl5', label: 'E-commerce Platform E-commerce', checked: true },
+  { id: 'scl6', label: 'E-commerce Platform E-commerce', checked: true },
+  { id: 'scl7', label: 'E-commerce Platform E-commerce', checked: false },
+  { id: 'scl8', label: 'E-commerce Platform E-commerce', checked: false },
+  { id: 'scl9', label: 'E-commerce Platform E-commerce', checked: false },
+]
+
+export const SUBTASKS: SubTask[] = [
+  {
+    id: 'st1',
+    name: 'Create hero section layout',
+    priority: 'High',
+    dueDate: 'Nov 27, 2025',
+    status: 'Review',
+    createdDate: '11/10/2025',
+    progress: 45,
+    assignees: [AVATARS[0], AVATARS[1], AVATARS[2]],
+    attachments: SUB_ATTACHMENTS,
+    checklist: SUB_CHECKLIST,
+    comments: COMMENTS,
+    description: 'Jessore Feed Ltd is a key Paragon Group company, providing reliable, high quality feed products that support farm growth and performance.',
+    companyName: 'Jessore Feed Ltd.',
+    branchName: 'Branch name 1',
+    departmentName: 'Food Inspection',
+    subProjectName: 'Marketing Automation',
+  },
+  {
+    id: 'st2',
+    name: 'Create a User Interface for the homepage',
+    priority: 'High',
+    dueDate: 'Nov 27, 2025',
+    status: 'To-Do',
+    createdDate: '11/10/2025',
+    progress: 0,
+    assignees: [AVATARS[0], AVATARS[1]],
+    attachments: [],
+    checklist: SUB_CHECKLIST.slice(0, 4),
+    comments: COMMENTS.slice(0, 1),
+    description: 'Create an intuitive user interface for the homepage with modern design patterns.',
+    companyName: 'Jessore Feed Ltd.',
+    branchName: 'Branch name 1',
+    departmentName: 'Food Inspection',
+    subProjectName: 'Marketing Automation',
+  },
+  {
+    id: 'st3',
+    name: 'Create hero section layout',
+    priority: 'Low',
+    dueDate: 'Nov 27, 2025',
+    status: 'In Progress',
+    createdDate: '11/10/2025',
+    progress: 30,
+    assignees: [AVATARS[2], AVATARS[3]],
+    attachments: SUB_ATTACHMENTS.slice(0, 2),
+    checklist: SUB_CHECKLIST.slice(0, 3),
+    comments: COMMENTS,
+    description: 'Build an intuitive homepage user interface focused on engagement.',
+    companyName: 'Jessore Feed Ltd.',
+    branchName: 'Branch name 1',
+    departmentName: 'Food Inspection',
+    subProjectName: 'Marketing Automation',
+  },
+  {
+    id: 'st4',
+    name: 'Developing the Homepage user interface',
+    priority: 'Medium',
+    dueDate: 'Nov 27, 2025',
+    status: 'To-Do',
+    createdDate: '11/10/2025',
+    progress: 0,
+    assignees: [AVATARS[0]],
+    attachments: [],
+    checklist: SUB_CHECKLIST.slice(2, 6),
+    comments: [],
+    description: 'Design a sleek and modern homepage with responsive layout.',
+    companyName: 'Jessore Feed Ltd.',
+    branchName: 'Branch name 1',
+    departmentName: 'Food Inspection',
+    subProjectName: 'Marketing Automation',
+  },
+  {
+    id: 'st5',
+    name: 'Build an intuitive homepage user interface',
+    priority: 'Medium',
+    dueDate: 'Nov 27, 2025',
+    status: 'To-Do',
+    createdDate: '11/10/2025',
+    progress: 0,
+    assignees: [AVATARS[1], AVATARS[4]],
+    attachments: [],
+    checklist: SUB_CHECKLIST.slice(0, 2),
+    comments: COMMENTS.slice(1, 2),
+    description: 'Build an intuitive user interface for the homepage.',
+    companyName: 'Jessore Feed Ltd.',
+    branchName: 'Branch name 1',
+    departmentName: 'Food Inspection',
+    subProjectName: 'Marketing Automation',
+  },
+  {
+    id: 'st6',
+    name: 'Craft an engaging homepage design',
+    priority: 'High',
+    dueDate: 'Nov 27, 2025',
+    status: 'To-Do',
+    createdDate: '11/10/2025',
+    progress: 0,
+    assignees: [AVATARS[0], AVATARS[2], AVATARS[3]],
+    attachments: SUB_ATTACHMENTS.slice(0, 1),
+    checklist: SUB_CHECKLIST.slice(3, 7),
+    comments: COMMENTS,
+    description: 'Craft an engaging and visually appealing homepage design.',
+    companyName: 'Jessore Feed Ltd.',
+    branchName: 'Branch name 1',
+    departmentName: 'Food Inspection',
+    subProjectName: 'Marketing Automation',
+  },
+  {
+    id: 'st7',
+    name: 'Craft an engaging homepage design',
+    priority: 'High',
+    dueDate: 'Nov 27, 2025',
+    status: 'Complete',
+    createdDate: '11/10/2025',
+    progress: 100,
+    assignees: [AVATARS[3], AVATARS[4]],
+    attachments: SUB_ATTACHMENTS.slice(0, 2),
+    checklist: SUB_CHECKLIST,
+    comments: COMMENTS.slice(0, 2),
+    description: 'Completed engaging homepage design.',
+    companyName: 'Jessore Feed Ltd.',
+    branchName: 'Branch name 1',
+    departmentName: 'Food Inspection',
+    subProjectName: 'Marketing Automation',
+  },
+  {
+    id: 'st8',
+    name: 'Craft an engaging homepage design',
+    priority: 'Low',
+    dueDate: 'Nov 27, 2025',
+    status: 'To-Do',
+    createdDate: '11/10/2025',
+    progress: 0,
+    assignees: [AVATARS[0]],
+    attachments: [],
+    checklist: SUB_CHECKLIST.slice(0, 3),
+    comments: [],
+    description: 'Low priority homepage design task.',
+    companyName: 'Jessore Feed Ltd.',
+    branchName: 'Branch name 1',
+    departmentName: 'Food Inspection',
+    subProjectName: 'Marketing Automation',
+  },
+  {
+    id: 'st9',
+    name: 'Build an intuitive homepage user interface',
+    priority: 'Medium',
+    dueDate: 'Nov 27, 2025',
+    status: 'In Progress',
+    createdDate: '11/10/2025',
+    progress: 60,
+    assignees: [AVATARS[1], AVATARS[2]],
+    attachments: SUB_ATTACHMENTS.slice(1, 3),
+    checklist: SUB_CHECKLIST.slice(1, 5),
+    comments: COMMENTS,
+    description: 'Build an intuitive homepage user interface.',
+    companyName: 'Jessore Feed Ltd.',
+    branchName: 'Branch name 1',
+    departmentName: 'Food Inspection',
+    subProjectName: 'Marketing Automation',
+  },
+  {
+    id: 'st10',
+    name: 'Design a sleek and modern homepage',
+    priority: 'Low',
+    dueDate: 'Nov 27, 2025',
+    status: 'To-Do',
+    createdDate: '11/10/2025',
+    progress: 0,
+    assignees: [AVATARS[4]],
+    attachments: [],
+    checklist: [],
+    comments: [],
+    description: 'Design a sleek and modern homepage layout.',
+    companyName: 'Jessore Feed Ltd.',
+    branchName: 'Branch name 1',
+    departmentName: 'Food Inspection',
+    subProjectName: 'Marketing Automation',
+  },
+  {
+    id: 'st11',
+    name: 'Develop a visually appealing homepage',
+    priority: 'Medium',
+    dueDate: 'Nov 27, 2025',
+    status: 'To-Do',
+    createdDate: '11/10/2025',
+    progress: 0,
+    assignees: [AVATARS[0], AVATARS[5]],
+    attachments: [],
+    checklist: SUB_CHECKLIST.slice(0, 4),
+    comments: COMMENTS.slice(0, 1),
+    description: 'Develop a visually appealing homepage design.',
+    companyName: 'Jessore Feed Ltd.',
+    branchName: 'Branch name 1',
+    departmentName: 'Food Inspection',
+    subProjectName: 'Marketing Automation',
+  },
+  {
+    id: 'st12',
+    name: 'Design a sleek and modern homepage',
+    priority: 'High',
+    dueDate: 'Nov 27, 2025',
+    status: 'To-Do',
+    createdDate: '11/10/2025',
+    progress: 0,
+    assignees: [AVATARS[2], AVATARS[6]],
+    attachments: [],
+    checklist: SUB_CHECKLIST.slice(2, 5),
+    comments: [],
+    description: 'Design a sleek modern homepage.',
+    companyName: 'Jessore Feed Ltd.',
+    branchName: 'Branch name 1',
+    departmentName: 'Food Inspection',
+    subProjectName: 'Marketing Automation',
+  },
+  {
+    id: 'st13',
+    name: 'Develop a visually appealing homepage',
+    priority: 'Medium',
+    dueDate: 'Nov 27, 2025',
+    status: 'In Progress',
+    createdDate: '11/10/2025',
+    progress: 40,
+    assignees: [AVATARS[0], AVATARS[1], AVATARS[3]],
+    attachments: SUB_ATTACHMENTS.slice(0, 2),
+    checklist: SUB_CHECKLIST.slice(0, 6),
+    comments: COMMENTS,
+    description: 'Develop visually appealing homepage.',
+    companyName: 'Jessore Feed Ltd.',
+    branchName: 'Branch name 1',
+    departmentName: 'Food Inspection',
+    subProjectName: 'Marketing Automation',
+  },
+  {
+    id: 'st14',
+    name: 'Devise a creative homepage design',
+    priority: 'Medium',
+    dueDate: 'Nov 27, 2025',
+    status: 'Complete',
+    createdDate: '11/10/2025',
+    progress: 100,
+    assignees: [AVATARS[1]],
+    attachments: [],
+    checklist: SUB_CHECKLIST,
+    comments: COMMENTS.slice(1),
+    description: 'Devise a creative homepage design.',
+    companyName: 'Jessore Feed Ltd.',
+    branchName: 'Branch name 1',
+    departmentName: 'Food Inspection',
+    subProjectName: 'Marketing Automation',
+  },
+]
+
+const TASK_ATTACHMENTS: Attachment[] = [
+  { id: 'a1', name: 'E-communities: P File.txt', size: '1.4 kb', type: 'image', uploadedAt: 'Nov 05, 2025' },
+  { id: 'a2', name: '%Attac...', size: '2.1 kb', type: 'image', uploadedAt: 'Nov 06, 2025' },
+  { id: 'a3', name: 'E-communities: plat...', size: '0 comments · 74x74', type: 'image', uploadedAt: 'Nov 07, 2025' },
+  { id: 'a4', name: 'E-communities', size: '4 comments · Pls ok', type: 'image', uploadedAt: 'Nov 08, 2025' },
 ]
 
 export const TASKS: Task[] = [
@@ -138,13 +430,10 @@ export const TASKS: Task[] = [
     departmentName: 'Food Inspection',
     subProjectName: 'Marketing Automation',
     description: 'Jessore Feed Ltd is a key Paragon Group company, providing reliable, high quality feed products that support farm growth and performance.',
-    subTasks: SUBTASKS,
+    subTasks: SUBTASKS.slice(0, 8),
     checklist: CHECKLIST,
     comments: COMMENTS,
-    attachments: [
-      { id: 'a1', name: 'wireframe_v1.fig', size: '2.4 MB', type: 'figma', uploadedAt: 'Nov 05, 2025' },
-      { id: 'a2', name: 'brand_guidelines.pdf', size: '1.1 MB', type: 'pdf', uploadedAt: 'Nov 06, 2025' },
-    ],
+    attachments: TASK_ATTACHMENTS,
   },
   {
     id: 't2',
@@ -156,9 +445,14 @@ export const TASKS: Task[] = [
     status: 'To-Do',
     dueDate: '11/20/2025',
     createdDate: '11/10/2025',
+    companyName: 'Jessore Feed Ltd.',
+    branchName: 'Branch name 1',
+    departmentName: 'Food Inspection',
+    subProjectName: 'E-commerce Platform',
     subTasks: SUBTASKS.slice(0, 4),
-    checklist: CHECKLIST.slice(0, 3),
+    checklist: CHECKLIST.slice(0, 5),
     comments: COMMENTS.slice(0, 1),
+    attachments: TASK_ATTACHMENTS.slice(0, 2),
   },
   {
     id: 't3',
@@ -170,9 +464,14 @@ export const TASKS: Task[] = [
     status: 'Complete',
     dueDate: '11/15/2025',
     createdDate: '11/01/2025',
+    companyName: 'Jessore Feed Ltd.',
+    branchName: 'Branch name 2',
+    departmentName: 'Marketing',
+    subProjectName: 'Digital Marketing',
     subTasks: SUBTASKS.slice(1, 5),
     checklist: CHECKLIST,
     comments: COMMENTS,
+    attachments: TASK_ATTACHMENTS.slice(0, 3),
   },
   {
     id: 't4',
@@ -184,9 +483,14 @@ export const TASKS: Task[] = [
     status: 'Review',
     dueDate: '11/25/2025',
     createdDate: '11/05/2025',
+    companyName: 'Jessore Feed Ltd.',
+    branchName: 'Branch name 1',
+    departmentName: 'IT Department',
+    subProjectName: 'Commerce Cloud',
     subTasks: SUBTASKS.slice(2, 6),
-    checklist: CHECKLIST.slice(2, 5),
+    checklist: CHECKLIST.slice(2, 7),
     comments: [],
+    attachments: [],
   },
   {
     id: 't5',
@@ -198,9 +502,14 @@ export const TASKS: Task[] = [
     status: 'To-Do',
     dueDate: '12/01/2025',
     createdDate: '11/10/2025',
+    companyName: 'Jessore Feed Ltd.',
+    branchName: 'Branch name 3',
+    departmentName: 'Operations',
+    subProjectName: 'Retail Platform',
     subTasks: [],
-    checklist: CHECKLIST.slice(0, 2),
+    checklist: CHECKLIST.slice(0, 4),
     comments: COMMENTS.slice(1, 2),
+    attachments: TASK_ATTACHMENTS.slice(1, 3),
   },
   {
     id: 't6',
@@ -212,9 +521,14 @@ export const TASKS: Task[] = [
     status: 'Not Started',
     dueDate: '11/10/2025',
     createdDate: '11/01/2025',
+    companyName: 'Jessore Feed Ltd.',
+    branchName: 'Branch name 1',
+    departmentName: 'Design',
+    subProjectName: 'Trade Platform',
     subTasks: SUBTASKS.slice(3, 7),
     checklist: [],
     comments: [],
+    attachments: [],
   },
   {
     id: 't7',
@@ -226,9 +540,14 @@ export const TASKS: Task[] = [
     status: 'Complete',
     dueDate: '11/18/2025',
     createdDate: '11/02/2025',
+    companyName: 'Jessore Feed Ltd.',
+    branchName: 'Branch name 2',
+    departmentName: 'Development',
+    subProjectName: 'Smart Commerce',
     subTasks: SUBTASKS.slice(0, 3),
     checklist: CHECKLIST,
     comments: COMMENTS,
+    attachments: TASK_ATTACHMENTS,
   },
   {
     id: 't8',
@@ -240,9 +559,14 @@ export const TASKS: Task[] = [
     status: 'Not Started',
     dueDate: '12/05/2025',
     createdDate: '11/08/2025',
+    companyName: 'Jessore Feed Ltd.',
+    branchName: 'Branch name 1',
+    departmentName: 'Design',
+    subProjectName: 'ShopLink Platform',
     subTasks: [],
     checklist: [],
     comments: [],
+    attachments: [],
   },
   {
     id: 't9',
@@ -254,9 +578,14 @@ export const TASKS: Task[] = [
     status: 'To-Do',
     dueDate: '11/28/2025',
     createdDate: '11/06/2025',
+    companyName: 'Jessore Feed Ltd.',
+    branchName: 'Branch name 1',
+    departmentName: 'Product',
+    subProjectName: 'Fusion Platform',
     subTasks: SUBTASKS.slice(1, 4),
-    checklist: CHECKLIST.slice(1, 4),
+    checklist: CHECKLIST.slice(1, 5),
     comments: COMMENTS.slice(0, 2),
+    attachments: TASK_ATTACHMENTS.slice(0, 2),
   },
   {
     id: 't10',
@@ -268,9 +597,14 @@ export const TASKS: Task[] = [
     status: 'In Progress',
     dueDate: '11/22/2025',
     createdDate: '11/04/2025',
+    companyName: 'Jessore Feed Ltd.',
+    branchName: 'Branch name 2',
+    departmentName: 'Development',
+    subProjectName: 'Rocket Platform',
     subTasks: SUBTASKS.slice(2, 7),
-    checklist: CHECKLIST.slice(0, 4),
+    checklist: CHECKLIST.slice(0, 6),
     comments: COMMENTS,
+    attachments: TASK_ATTACHMENTS,
   },
   {
     id: 't11',
@@ -282,23 +616,33 @@ export const TASKS: Task[] = [
     status: 'Complete',
     dueDate: '11/14/2025',
     createdDate: '11/01/2025',
+    companyName: 'Jessore Feed Ltd.',
+    branchName: 'Branch name 1',
+    departmentName: 'Design',
+    subProjectName: 'Wave Platform',
     subTasks: SUBTASKS.slice(0, 5),
     checklist: CHECKLIST,
     comments: COMMENTS.slice(1, 3),
+    attachments: TASK_ATTACHMENTS.slice(0, 3),
   },
   {
     id: 't12',
     name: 'Build the user interface for the...',
-    project: 'Project X E-commerce...',
+    project: 'Project X E-commerce Pl...',
     assignees: [AVATARS[0], AVATARS[1], AVATARS[3], AVATARS[4]],
     progress: 65,
     priority: 'High',
     status: 'To-Do',
     dueDate: '12/10/2025',
     createdDate: '11/09/2025',
+    companyName: 'Jessore Feed Ltd.',
+    branchName: 'Branch name 1',
+    departmentName: 'Engineering',
+    subProjectName: 'Project X',
     subTasks: SUBTASKS.slice(3, 8),
-    checklist: CHECKLIST.slice(2, 6),
+    checklist: CHECKLIST.slice(2, 7),
     comments: [],
+    attachments: TASK_ATTACHMENTS.slice(0, 2),
   },
 ]
 

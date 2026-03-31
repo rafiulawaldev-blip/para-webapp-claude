@@ -1,17 +1,17 @@
 import React, { useState } from 'react'
-import { useParams, useNavigate } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import {
   Paperclip, CheckSquare, MessageSquare, AlignLeft,
-  MoreVertical, CalendarDays, ChevronDown, ChevronUp,
+  MoreVertical, ChevronDown, ChevronUp,
   Send, X, Plus, ExternalLink,
 } from 'lucide-react'
 import { Header } from '../components/layout/Header'
 import { StatusBadge, PriorityBadge } from '../components/ui/Badge'
 import { Avatar } from '../components/ui/AvatarStack'
 import { DonutChart } from '../components/ui/DonutChart'
-import { TASKS } from '../data/mockData'
+import { TASKS, SUBTASKS } from '../data/mockData'
 
-type TabId = 'description' | 'attachment' | 'subtask' | 'checklist' | 'comments'
+type TabId = 'description' | 'attachment' | 'checklist' | 'comments'
 
 const DONUT_SEGMENTS = [
   { value: 21, color: '#3b82f6', label: 'To-Do' },
@@ -23,25 +23,30 @@ const DONUT_SEGMENTS = [
 
 const ATTACHMENT_COLORS = ['#e8f4fd', '#fef3e2', '#f0fdf4', '#fdf2f8']
 
-export function TaskDescription() {
-  const { id } = useParams()
-  const navigate = useNavigate()
-  const task = TASKS.find((t) => t.id === id) ?? TASKS[0]
+export function SubTaskDescription() {
+  const { taskId, subId } = useParams()
+  const parentTask = TASKS.find((t) => t.id === taskId) ?? TASKS[0]
+  const subTask =
+    parentTask.subTasks?.find((s) => s.id === subId) ??
+    SUBTASKS.find((s) => s.id === subId) ??
+    SUBTASKS[0]
+
   const [activeTab, setActiveTab] = useState<TabId>('description')
   const [aboutOpen, setAboutOpen] = useState(true)
   const [descOpen, setDescOpen] = useState(true)
   const [comment, setComment] = useState('')
 
-  const attachmentCount = task.attachments?.length ?? 0
-  const commentCount = task.comments?.length ?? 0
-  const checkedCount = task.checklist?.filter((c) => c.checked).length ?? 0
-  const totalChecklist = task.checklist?.length ?? 0
-  const checklistPct = totalChecklist > 0 ? Math.round((checkedCount / totalChecklist) * 100) : 0
+  const attachmentCount = subTask.attachments?.length ?? 0
+  const commentCount    = subTask.comments?.length ?? 0
+  const checkedCount    = subTask.checklist?.filter((c) => c.checked).length ?? 0
+  const totalChecklist  = subTask.checklist?.length ?? 0
+  const checklistPct    = totalChecklist > 0 ? Math.round((checkedCount / totalChecklist) * 100) : 0
+
+  const assignees = subTask.assignees ?? parentTask.assignees
 
   const TABS: { id: TabId; label: string }[] = [
     { id: 'description', label: 'Description' },
     { id: 'attachment',  label: `Attachment (${attachmentCount})` },
-    { id: 'subtask',     label: 'Sub-Task' },
     { id: 'checklist',   label: 'Checklist' },
     { id: 'comments',    label: `Comments (${commentCount})` },
   ]
@@ -53,18 +58,18 @@ export function TaskDescription() {
         breadcrumbs={[
           { label: 'Jessore Feed Ltd.' },
           { label: 'Task' },
-          { label: task.name },
+          { label: subTask.name },
         ]}
       />
 
       <div className="flex flex-1 overflow-hidden">
         {/* Left — tabbed content */}
         <div className="flex-1 flex flex-col overflow-hidden bg-white border-r border-gray-100">
-          {/* Task title */}
+          {/* Sub-task title */}
           <div className="px-6 pt-5 pb-0">
             <div className="flex items-center gap-2 mb-4">
-              <span className="text-gray-400 text-sm">⊞</span>
-              <h2 className="text-base font-semibold text-gray-900">{task.name}</h2>
+              <CheckSquare className="w-4 h-4 text-blue-500" />
+              <h2 className="text-base font-semibold text-gray-900">{subTask.name}</h2>
             </div>
 
             {/* Tabs */}
@@ -97,7 +102,7 @@ export function TaskDescription() {
                     className="flex items-center gap-2 text-sm font-semibold text-gray-800 mb-3"
                   >
                     {aboutOpen ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
-                    About Project
+                    About Task
                   </button>
                   {aboutOpen && (
                     <div className="space-y-3 text-sm text-gray-600 leading-relaxed">
@@ -128,10 +133,8 @@ export function TaskDescription() {
                   {descOpen && (
                     <div className="space-y-3 text-sm text-gray-600 leading-relaxed">
                       <p>
-                        Jessore Feed Ltd is a key Paragon Group company, providing reliable, high quality feed
-                        products that support farm growth and performance. Jessore Feed Ltd is a key Paragon
-                        Group company, providing reliable, high quality feed products that support farm growth
-                        and performance.
+                        {subTask.description ??
+                          'Jessore Feed Ltd is a key Paragon Group company, providing reliable, high quality feed products that support farm growth and performance.'}
                       </p>
                       <p>
                         Jessore Feed Ltd is a key Paragon Group company, providing reliable, high quality feed
@@ -152,12 +155,11 @@ export function TaskDescription() {
                   <p className="text-sm text-gray-400 text-center py-8">No attachments yet.</p>
                 ) : (
                   <div className="grid grid-cols-2 gap-3">
-                    {task.attachments?.map((att, idx) => (
+                    {subTask.attachments?.map((att, idx) => (
                       <div
                         key={att.id}
                         className="border border-gray-100 rounded-xl overflow-hidden hover:border-gray-200 hover:shadow-sm transition-all group"
                       >
-                        {/* Preview */}
                         <div
                           className="h-32 relative flex items-center justify-center"
                           style={{ backgroundColor: ATTACHMENT_COLORS[idx % ATTACHMENT_COLORS.length] }}
@@ -167,7 +169,6 @@ export function TaskDescription() {
                             <X className="w-3 h-3" />
                           </button>
                         </div>
-                        {/* Info */}
                         <div className="p-2.5">
                           <p className="text-xs font-medium text-gray-800 truncate">{att.name}</p>
                           <div className="flex items-center gap-2 mt-1">
@@ -187,55 +188,9 @@ export function TaskDescription() {
               </div>
             )}
 
-            {/* ── SUB-TASK ── */}
-            {activeTab === 'subtask' && (
-              <div className="overflow-x-auto">
-                <table className="w-full text-sm">
-                  <thead>
-                    <tr className="border-b border-gray-100">
-                      {['Task Name', 'Priority', 'Due Date', 'Actions'].map((h) => (
-                        <th key={h} className="px-3 py-2.5 text-left text-xs font-medium text-gray-500">{h}</th>
-                      ))}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {task.subTasks?.map((sub) => (
-                      <tr
-                        key={sub.id}
-                        className="border-b border-gray-50 hover:bg-gray-50 cursor-pointer"
-                        onClick={() => navigate(`/tasks/${task.id}/subtask/${sub.id}`)}
-                      >
-                        <td className="px-3 py-2.5 text-gray-700 truncate max-w-[250px]">{sub.name}</td>
-                        <td className="px-3 py-2.5">
-                          <PriorityBadge priority={sub.priority as any} />
-                        </td>
-                        <td className="px-3 py-2.5">
-                          <div className="flex items-center gap-1.5 text-xs text-gray-500">
-                            <CalendarDays className="w-3.5 h-3.5" />
-                            {sub.dueDate}
-                          </div>
-                        </td>
-                        <td className="px-3 py-2.5 relative">
-                          <SubTaskContextMenu />
-                        </td>
-                      </tr>
-                    ))}
-                    {(!task.subTasks || task.subTasks.length === 0) && (
-                      <tr>
-                        <td colSpan={4} className="px-3 py-8 text-center text-sm text-gray-400">
-                          No sub-tasks yet.
-                        </td>
-                      </tr>
-                    )}
-                  </tbody>
-                </table>
-              </div>
-            )}
-
             {/* ── CHECKLIST ── */}
             {activeTab === 'checklist' && (
               <div className="space-y-2">
-                {/* Header row */}
                 <div className="flex items-center gap-3 mb-4">
                   <span className="text-sm font-medium text-gray-700 whitespace-nowrap">
                     {checklistPct}% Done
@@ -252,7 +207,7 @@ export function TaskDescription() {
                   </button>
                 </div>
 
-                {task.checklist?.map((item) => (
+                {subTask.checklist?.map((item) => (
                   <label key={item.id} className="flex items-center gap-3 py-2 cursor-pointer group">
                     <input
                       type="checkbox"
@@ -265,6 +220,10 @@ export function TaskDescription() {
                   </label>
                 ))}
 
+                {(!subTask.checklist || subTask.checklist.length === 0) && (
+                  <p className="text-sm text-gray-400 text-center py-8">No checklist items yet.</p>
+                )}
+
                 <button className="flex items-center gap-1.5 text-xs text-gray-400 hover:text-gray-600 mt-2 px-1 py-1">
                   <Plus className="w-3.5 h-3.5" />
                   Add item
@@ -275,7 +234,7 @@ export function TaskDescription() {
             {/* ── COMMENTS ── */}
             {activeTab === 'comments' && (
               <div className="space-y-5">
-                {task.comments?.map((c) => (
+                {subTask.comments?.map((c) => (
                   <div key={c.id} className="flex gap-3">
                     <Avatar assignee={c.author} size="md" />
                     <div className="flex-1">
@@ -300,7 +259,10 @@ export function TaskDescription() {
                   </div>
                 ))}
 
-                {/* Comment input */}
+                {(!subTask.comments || subTask.comments.length === 0) && (
+                  <p className="text-sm text-gray-400 text-center py-8">No comments yet.</p>
+                )}
+
                 <div className="flex gap-3 pt-2 border-t border-gray-100">
                   <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center flex-shrink-0">
                     <span className="text-white text-[10px] font-bold">MD</span>
@@ -333,15 +295,25 @@ export function TaskDescription() {
           </div>
 
           <div className="space-y-3 text-xs">
-            <DetailRow label="Status"><StatusBadge status={task.status} /></DetailRow>
-            <DetailRow label="Company Name"><span className="text-gray-700">{task.companyName}</span></DetailRow>
-            <DetailRow label="Branch Name"><span className="text-gray-700">{task.branchName}</span></DetailRow>
-            <DetailRow label="Department Name"><span className="text-gray-700">{task.departmentName}</span></DetailRow>
-            <DetailRow label="Project Name"><span className="text-gray-700">{task.project}</span></DetailRow>
-            <DetailRow label="Sub-Project Name"><span className="text-gray-700">{task.subProjectName}</span></DetailRow>
+            <DetailRow label="Status"><StatusBadge status={subTask.status} /></DetailRow>
+            <DetailRow label="Company Name">
+              <span className="text-gray-700">{subTask.companyName ?? parentTask.companyName ?? 'N/A'}</span>
+            </DetailRow>
+            <DetailRow label="Branch Name">
+              <span className="text-gray-700">{subTask.branchName ?? parentTask.branchName ?? 'N/A'}</span>
+            </DetailRow>
+            <DetailRow label="Department Name">
+              <span className="text-gray-700">{subTask.departmentName ?? parentTask.departmentName ?? 'N/A'}</span>
+            </DetailRow>
+            <DetailRow label="Task Name">
+              <span className="text-gray-700">{parentTask.name}</span>
+            </DetailRow>
+            <DetailRow label="Sub-Project Name">
+              <span className="text-gray-700">{subTask.subProjectName ?? parentTask.subProjectName ?? 'N/A'}</span>
+            </DetailRow>
             <DetailRow label="Assignee">
               <div className="flex flex-col gap-1.5">
-                {task.assignees.slice(0, 3).map((a) => (
+                {assignees.slice(0, 3).map((a) => (
                   <div key={a.id} className="flex items-center gap-1.5">
                     <div
                       className="w-5 h-5 rounded-full flex items-center justify-center text-white text-[9px] font-medium"
@@ -352,14 +324,18 @@ export function TaskDescription() {
                     <span className="text-gray-700">{a.name}</span>
                   </div>
                 ))}
-                {task.assignees.length > 3 && (
-                  <span className="text-blue-500 font-medium">+{task.assignees.length - 3}</span>
+                {assignees.length > 3 && (
+                  <span className="text-blue-500 font-medium">+{assignees.length - 3}</span>
                 )}
               </div>
             </DetailRow>
-            <DetailRow label="Priority"><PriorityBadge priority={task.priority} /></DetailRow>
-            <DetailRow label="Created Date"><span className="text-gray-700">{task.createdDate}</span></DetailRow>
-            <DetailRow label="Due Date"><span className="text-gray-700">{task.dueDate}</span></DetailRow>
+            <DetailRow label="Priority"><PriorityBadge priority={subTask.priority} /></DetailRow>
+            <DetailRow label="Created Date">
+              <span className="text-gray-700">{subTask.createdDate ?? 'N/A'}</span>
+            </DetailRow>
+            <DetailRow label="Due Date">
+              <span className="text-gray-700">{subTask.dueDate}</span>
+            </DetailRow>
           </div>
 
           {/* Donut chart */}
@@ -394,35 +370,6 @@ export function TaskDescription() {
           </div>
         </div>
       </div>
-    </div>
-  )
-}
-
-function SubTaskContextMenu() {
-  const [open, setOpen] = useState(false)
-  return (
-    <div className="relative inline-block">
-      <button
-        onClick={(e) => { e.stopPropagation(); setOpen((o) => !o) }}
-        className="text-gray-400 hover:text-gray-600 p-1 rounded"
-      >
-        <MoreVertical className="w-4 h-4" />
-      </button>
-      {open && (
-        <div className="absolute right-8 top-0 z-10 bg-white border border-gray-100 rounded-lg shadow-lg py-1 min-w-[100px]">
-          {['Create', 'Edit', 'Comment', 'Delete'].map((action) => (
-            <button
-              key={action}
-              onClick={(e) => { e.stopPropagation(); setOpen(false) }}
-              className={`w-full text-left px-3 py-1.5 text-xs hover:bg-gray-50 ${
-                action === 'Delete' ? 'text-red-500' : 'text-gray-700'
-              }`}
-            >
-              {action}
-            </button>
-          ))}
-        </div>
-      )}
     </div>
   )
 }
