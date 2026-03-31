@@ -7,24 +7,47 @@ import { TaskDescription } from './pages/TaskDescription'
 import { CreateTask } from './pages/CreateTask'
 import { Placeholder } from './pages/Placeholder'
 
+// Auth pages
+import { Login } from './pages/auth/Login'
+import { LoginSuccess } from './pages/auth/LoginSuccess'
+import { ForgotPassword } from './pages/auth/ForgotPassword'
+import { CheckInbox } from './pages/auth/CheckInbox'
+import { CreateNewPassword } from './pages/auth/CreateNewPassword'
+import { PasswordChanged } from './pages/auth/PasswordChanged'
+import { DefaultWorkspace } from './pages/auth/DefaultWorkspace'
+
 export default function App() {
   return (
     <BrowserRouter>
-      <AppShell>
-        <Routes>
-          <Route path="/"              element={<Dashboard />} />
-          <Route path="/tasks"         element={<TaskListing />} />
-          <Route path="/tasks/create"  element={<CreateTask />} />
-          <Route path="/tasks/:id"     element={<TaskDescription />} />
-          <Route path="/tasks/support" element={<Placeholder title="Support Tasks" breadcrumbs={[{ label: 'Jessore Feed Ltd.' }, { label: 'Support Task' }]} />} />
-          <Route path="/my-todo"       element={<Placeholder title="My To-Do"       breadcrumbs={[{ label: 'Jessore Feed Ltd.' }, { label: 'My To-Do' }]} />} />
-          <Route path="/projects"      element={<Placeholder title="Projects"       breadcrumbs={[{ label: 'Jessore Feed Ltd.' }, { label: 'Projects' }]} />} />
-          <Route path="/tickets"       element={<Placeholder title="Support Tickets" breadcrumbs={[{ label: 'Jessore Feed Ltd.' }, { label: 'Support Tickets' }]} />} />
-          <Route path="/reports"       element={<Placeholder title="Reports"        breadcrumbs={[{ label: 'Jessore Feed Ltd.' }, { label: 'Reports' }]} />} />
-          <Route path="/settings"      element={<Placeholder title="Settings"       breadcrumbs={[{ label: 'Jessore Feed Ltd.' }, { label: 'Settings' }]} />} />
-          <Route path="*"              element={<Navigate to="/" replace />} />
-        </Routes>
-      </AppShell>
+      <Routes>
+        {/* ── Auth routes (no AppShell) ── */}
+        <Route path="/auth/login"            element={<Login />} />
+        <Route path="/auth/login-success"    element={<LoginSuccess />} />
+        <Route path="/auth/forgot-password"  element={<ForgotPassword />} />
+        <Route path="/auth/check-inbox"      element={<CheckInbox />} />
+        <Route path="/auth/new-password"     element={<CreateNewPassword />} />
+        <Route path="/auth/password-changed" element={<PasswordChanged />} />
+        <Route path="/auth/workspace"        element={<DefaultWorkspace />} />
+
+        {/* ── App routes (inside AppShell) ── */}
+        <Route path="/*" element={
+          <AppShell>
+            <Routes>
+              <Route path="/"              element={<Dashboard />} />
+              <Route path="/tasks"         element={<TaskListing />} />
+              <Route path="/tasks/create"  element={<CreateTask />} />
+              <Route path="/tasks/:id"     element={<TaskDescription />} />
+              <Route path="/tasks/support" element={<Placeholder title="Support Tasks"    breadcrumbs={[{ label: 'Jessore Feed Ltd.' }, { label: 'Support Task' }]} />} />
+              <Route path="/my-todo"       element={<Placeholder title="My To-Do"         breadcrumbs={[{ label: 'Jessore Feed Ltd.' }, { label: 'My To-Do' }]} />} />
+              <Route path="/projects"      element={<Placeholder title="Projects"         breadcrumbs={[{ label: 'Jessore Feed Ltd.' }, { label: 'Projects' }]} />} />
+              <Route path="/tickets"       element={<Placeholder title="Support Tickets"  breadcrumbs={[{ label: 'Jessore Feed Ltd.' }, { label: 'Support Tickets' }]} />} />
+              <Route path="/reports"       element={<Placeholder title="Reports"          breadcrumbs={[{ label: 'Jessore Feed Ltd.' }, { label: 'Reports' }]} />} />
+              <Route path="/settings"      element={<Placeholder title="Settings"         breadcrumbs={[{ label: 'Jessore Feed Ltd.' }, { label: 'Settings' }]} />} />
+              <Route path="*"              element={<Navigate to="/" replace />} />
+            </Routes>
+          </AppShell>
+        } />
+      </Routes>
     </BrowserRouter>
   )
 }

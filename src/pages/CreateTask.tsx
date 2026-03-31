@@ -40,7 +40,7 @@ export function CreateTask() {
                 placeholder="Enter department name"
                 value={form.taskName}
                 onChange={(e) => set('taskName', e.target.value)}
-                className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400 placeholder:text-gray-300"
+                className="w-full px-4 h-12 text-base border border-[rgba(0,0,0,0.05)] rounded-[8px] bg-white focus:outline-none focus:border-[rgba(0,0,0,0.4)] placeholder:text-[rgba(0,0,0,0.4)] text-[#242529]"
               />
             </div>
 
@@ -53,7 +53,7 @@ export function CreateTask() {
                 <select
                   value={form.project}
                   onChange={(e) => set('project', e.target.value)}
-                  className="w-full appearance-none px-3 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400 text-gray-400 bg-white"
+                  className="w-full appearance-none px-4 h-12 text-base border border-[rgba(0,0,0,0.05)] rounded-[8px] bg-white focus:outline-none focus:border-[rgba(0,0,0,0.4)] text-[rgba(0,0,0,0.4)]"
                 >
                   <option value="">Search or select an existing list</option>
                   <option>NovaCart Online Store</option>
@@ -71,7 +71,7 @@ export function CreateTask() {
                 <select
                   value={form.priority}
                   onChange={(e) => set('priority', e.target.value)}
-                  className="w-full appearance-none px-3 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400 text-gray-400 bg-white"
+                  className="w-full appearance-none px-4 h-12 text-base border border-[rgba(0,0,0,0.05)] rounded-[8px] bg-white focus:outline-none focus:border-[rgba(0,0,0,0.4)] text-[rgba(0,0,0,0.4)]"
                 >
                   <option value="">Search or select an existing list</option>
                   <option>Urgent</option>
@@ -90,7 +90,7 @@ export function CreateTask() {
                 <select
                   value={form.assignee}
                   onChange={(e) => set('assignee', e.target.value)}
-                  className="w-full appearance-none px-3 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400 text-gray-400 bg-white"
+                  className="w-full appearance-none px-4 h-12 text-base border border-[rgba(0,0,0,0.05)] rounded-[8px] bg-white focus:outline-none focus:border-[rgba(0,0,0,0.4)] text-[rgba(0,0,0,0.4)]"
                 >
                   <option value="">Search or select an existing user</option>
                   <option>Salman Omayer</option>
@@ -105,7 +105,7 @@ export function CreateTask() {
             {/* Attach File */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1.5">Attach File</label>
-              <div className="relative border border-gray-200 rounded-lg px-3 py-2 flex items-center gap-2 hover:bg-gray-50 cursor-pointer">
+              <div className="relative border border-[rgba(0,0,0,0.05)] rounded-[8px] h-12 px-4 flex items-center gap-2 bg-white hover:border-[rgba(0,0,0,0.4)] cursor-pointer">
                 <Upload className="w-4 h-4 text-gray-400" />
                 <span className="text-sm text-gray-400 flex-1">Choose file</span>
                 <input type="file" className="absolute inset-0 opacity-0 cursor-pointer" />
@@ -119,7 +119,7 @@ export function CreateTask() {
                 <select
                   value={form.deadline}
                   onChange={(e) => set('deadline', e.target.value)}
-                  className="w-full appearance-none px-3 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400 text-gray-400 bg-white"
+                  className="w-full appearance-none px-4 h-12 text-base border border-[rgba(0,0,0,0.05)] rounded-[8px] bg-white focus:outline-none focus:border-[rgba(0,0,0,0.4)] text-[rgba(0,0,0,0.4)]"
                 >
                   <option value="">Search or select an existing user</option>
                   <option>Nov 27, 2025</option>
@@ -138,7 +138,7 @@ export function CreateTask() {
                 rows={4}
                 value={form.aboutTask}
                 onChange={(e) => set('aboutTask', e.target.value)}
-                className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400 placeholder:text-gray-300 resize-none"
+                className="w-full px-4 py-3 text-base border border-[rgba(0,0,0,0.05)] rounded-[8px] bg-white focus:outline-none focus:border-[rgba(0,0,0,0.4)] placeholder:text-[rgba(0,0,0,0.4)] text-[#242529] resize-none"
               />
             </div>
 
@@ -150,7 +150,7 @@ export function CreateTask() {
                 rows={4}
                 value={form.description}
                 onChange={(e) => set('description', e.target.value)}
-                className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400 placeholder:text-gray-300 resize-none"
+                className="w-full px-4 py-3 text-base border border-[rgba(0,0,0,0.05)] rounded-[8px] bg-white focus:outline-none focus:border-[rgba(0,0,0,0.4)] placeholder:text-[rgba(0,0,0,0.4)] text-[#242529] resize-none"
               />
             </div>
           </div>

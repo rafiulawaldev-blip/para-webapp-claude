@@ -63,7 +63,7 @@ export interface TeamRow {
   name: string
   totalTasks: number
   completed: number
-  workload: 'Over load' | 'High' | 'Medium' | 'Normal'
+  workload: 'Over' | 'High' | 'Medium' | 'Low'
 }
 
 export interface PriorityRow {
@@ -303,12 +303,12 @@ export const TASKS: Task[] = [
 ]
 
 export const TEAM_ROWS: TeamRow[] = [
-  { name: 'Team 1', totalTasks: 12, completed: 4, workload: 'Over load' },
+  { name: 'Team 1', totalTasks: 12, completed: 4, workload: 'Over' },
   { name: 'Team 2', totalTasks: 7,  completed: 5, workload: 'Medium' },
-  { name: 'Team 3', totalTasks: 9,  completed: 5, workload: 'Normal' },
+  { name: 'Team 3', totalTasks: 9,  completed: 5, workload: 'Low' },
   { name: 'Team 1', totalTasks: 12, completed: 4, workload: 'High' },
   { name: 'Team 2', totalTasks: 7,  completed: 5, workload: 'Medium' },
-  { name: 'Team 1', totalTasks: 12, completed: 4, workload: 'Over load' },
+  { name: 'Team 1', totalTasks: 12, completed: 4, workload: 'Over' },
   { name: 'Team 2', totalTasks: 7,  completed: 5, workload: 'Medium' },
 ]
 

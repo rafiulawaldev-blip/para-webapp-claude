@@ -10,11 +10,11 @@ interface KanbanBoardProps {
 }
 
 const COLUMNS: { id: string; label: string; color: string; dot: string }[] = [
-  { id: 'To-Do',       label: 'To-Do',       color: 'text-green-600 bg-green-50',  dot: 'bg-green-500' },
-  { id: 'In Progress', label: 'In Progress', color: 'text-gray-600 bg-gray-100',   dot: 'bg-gray-400' },
-  { id: 'Review',      label: 'Review',      color: 'text-yellow-600 bg-yellow-50', dot: 'bg-yellow-500' },
-  { id: 'Complete',    label: 'Complete',    color: 'text-blue-600 bg-blue-50',    dot: 'bg-blue-500' },
-  { id: 'Not Started', label: 'Not Started', color: 'text-red-500 bg-red-50',      dot: 'bg-red-400' },
+  { id: 'To-Do',       label: 'To-Do',       color: 'text-[#2a533c] bg-[#e4efe9] border border-[rgba(42,83,60,0.1)]', dot: 'bg-[#c4e4d3]' },
+  { id: 'In Progress', label: 'In Progress', color: 'text-[#2c2c2b] bg-[#e3e3e3]',                                   dot: 'bg-[#9ca3af]' },
+  { id: 'Review',      label: 'Review',      color: 'text-[#655121] bg-[#f5f0e5]',                                   dot: 'bg-[#e8a838]' },
+  { id: 'Complete',    label: 'Complete',    color: 'text-[#1d67b0] bg-[#e2ebf4]',                                   dot: 'bg-[#2783de]' },
+  { id: 'Not Started', label: 'Not Started', color: 'text-[#6d3531] bg-[#e9e4e3] border border-[rgba(109,53,49,0.05)]', dot: 'bg-[#e74c3c]' },
 ]
 
 export function KanbanBoard({ tasks, onSelectTask }: KanbanBoardProps) {
